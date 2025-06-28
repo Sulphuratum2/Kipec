@@ -145,18 +145,6 @@ export default function ImageCropper() {
 
       const maskCanvas = results.segmentationMask;
 
-      const personCanvas = document.createElement('canvas');
-      personCanvas.width = canvas.width;
-      personCanvas.height = canvas.height;
-      const personCtx = personCanvas.getContext('2d');
-
-      personCtx.filter = 'blur(2px)';
-      personCtx.drawImage(maskCanvas, 0, 0);
-      personCtx.filter = 'none';
-
-      personCtx.globalCompositeOperation = 'source-in';
-      personCtx.drawImage(imageSource, 0, 0);
-
       const outputCanvas = document.createElement('canvas');
       outputCanvas.width = canvas.width;
       outputCanvas.height = canvas.height;
@@ -164,9 +152,14 @@ export default function ImageCropper() {
 
       outputCtx.fillStyle = '#eeeeee';
       outputCtx.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
-      outputCtx.globalCompositeOperation = 'destination-in';
-      outputCtx.drawImage(maskCanvas, 0, 0);
-      outputCtx.globalCompositeOperation = 'source-over';
+      
+      const personCanvas = document.createElement('canvas');
+      personCanvas.width = canvas.width;
+      personCanvas.height = canvas.height;
+      const personCtx = personCanvas.getContext('2d');
+      personCtx.drawImage(imageSource, 0, 0);
+      personCtx.globalCompositeOperation = 'destination-in';
+      personCtx.drawImage(maskCanvas, 0, 0);
 
       outputCtx.drawImage(personCanvas, 0, 0);
 
@@ -208,7 +201,7 @@ export default function ImageCropper() {
       const faceWidth = face.bottomRight[0] - face.topLeft[0];
       const faceCenterY = (face.topLeft[1] + face.bottomRight[1]) / 2;
 
-      const cropWidth = faceWidth * 1.6;
+      const cropWidth = faceWidth * 1.65;
       const cropHeight = cropWidth * targetAspect;
 
       let cropX = noseCenterX - cropWidth / 2;
